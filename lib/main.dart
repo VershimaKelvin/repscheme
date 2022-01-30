@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:repscheme/database_helper.dart';
 
 void main() {
   runApp( const MaterialApp(home: MyApp()));
@@ -14,6 +15,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   final repController = TextEditingController();
+  final weightController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +45,7 @@ class _MyAppState extends State<MyApp> {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: TextFormField(
-                controller:repController,
+                controller:weightController,
                 // autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Weight(Numbers Only)',
@@ -62,9 +64,24 @@ class _MyAppState extends State<MyApp> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(12)
                 ),
-                child: const TextButton(
-                  onPressed:null,
-                  child: Text(
+                child: TextButton(
+                  onPressed:()async{
+
+                    String repScheme = repController.text;
+                    int weight =int.parse(weightController.text);
+                    if(weight==null || repScheme==null){
+                      print('Error');
+                    }else {
+                      DatabaseHelper data = DatabaseHelper.instance;
+                      int i = await data.insert(
+                          {
+                            'RepScheme': repScheme,
+                            'weight': weight
+                          }
+                      );
+                    }
+                  },
+                  child: const Text(
                     'Add Workout',
                     style: TextStyle(
                         color: Colors.white
